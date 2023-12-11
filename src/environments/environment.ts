@@ -2,9 +2,19 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+//export const environment = {
+//  production: false,
+//  backendUrl: '/api',
+ // firebaseConfig: {
+ //   apiKey: "AIzaSyCHKc-9GFvrbXMKLlgua2yAtgCibPLddh8",
+ //   authDomain: "budget-planner-7eddb.firebaseapp.com",
+ //   projectId: "budget-planner-7eddb",
+ //   appId: "1:278151755192:web:227ae9460314c348be4b4d",
+ // }
+//};
+
 export const environment = {
-  production: false,
-  backendUrl: '/api',
+  production: true,
   firebaseConfig: {
     apiKey: "AIzaSyCHKc-9GFvrbXMKLlgua2yAtgCibPLddh8",
     authDomain: "budget-planner-7eddb.firebaseapp.com",
@@ -12,7 +22,6 @@ export const environment = {
     appId: "1:278151755192:web:227ae9460314c348be4b4d",
   }
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

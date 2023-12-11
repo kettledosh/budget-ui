@@ -1,1 +1,147 @@
-Category List
+
+<!-- ------ -->
+<!-- Header -->
+<!-- ------ -->
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Categories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- ------- -->
+<!-- Content -->
+<!-- ------- -->
+<ion-content>
+  <!-- Search & sort -->
+  <ion-grid class="ion-padding">
+    <ion-row>
+      <ion-col size="12" size-sm="6">
+        <ion-item>
+          <ion-icon name="swap-vertical" slot="start"></ion-icon>
+          <ion-select interface="popover" value="Name (A-Z)">
+            <ion-select-option>Created at (newest first)</ion-select-option>
+            <ion-select-option>Created at (oldest first)</ion-select-option>
+            <ion-select-option>Name (A-Z)</ion-select-option>
+            <ion-select-option>Name (Z-A)</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12" size-sm="6">
+        <ion-item>
+          <ion-icon name="search" slot="start"></ion-icon>
+          <ion-input maxlength="40" placeholder="Search" [clearInput]="true"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Category list -->
+  <ion-list inset="true">
+
+    <!-- Categories -->
+    <ion-item button="true" [detail]="true" (click)="openModal()">
+      <ion-label>Auswärts Essen</ion-label>
+    </ion-item>
+
+  </ion-list>
+
+  <!-- Create fab button -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="openModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Categories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-icon name="swap-vertical-outline"></ion-icon>
+          <ion-col size="auto"></ion-col>
+          <ion-select label="Name (A-Z)" interface="popover">
+            <ion-select-option value="newest">Created at (newest first)</ion-select-option>
+            <ion-select-option value="oldest">Created at (oldest first)</ion-select-option>
+            <ion-select-option value="AZ">Name (A-Z)</ion-select-option>
+            <ion-select-option value="ZS">Name (Z-A)</ion-select-option>
+          </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col>
+          <ion-item>
+            <ion-icon name="search-outline"></ion-icon>
+            <ion-input label="" placeholder="Search"> </ion-input>
+          </ion-item>
+        </ion-col>
+    </ion-row>
+
+
+
+
+
+  <ion-row style="height:20px"></ion-row>
+<ion-item>
+  <ion-icon name="alert-circle-outline"></ion-icon>
+  <p>No categories found</p>
+</ion-item>
+
+
+
+
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button id="open-modal">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">
+              <ion-icon name="close-outline"></ion-icon>
+              Cancel
+            </ion-button>
+          </ion-buttons>
+          <ion-title>Add category</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" disabled="true" [strong]="true">
+              <ion-icon name="save"></ion-icon>
+               Save
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-icon name="text-outline"></ion-icon>
+          <ion-col></ion-col>
+          <ion-input labelPlacement="stacked" type="text" placeholder="Enter the category's name"></ion-input>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+
+</ion-content>
+
+
+
+
+<ion-footer>
+
+</ion-footer>
+-->

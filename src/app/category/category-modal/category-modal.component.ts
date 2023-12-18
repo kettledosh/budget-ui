@@ -46,7 +46,7 @@ export class CategoryModalComponent {
         },
         error: (error) => this.toastService.displayErrorToast('Could not save category', error),
       });
-    this.modalCtrl.dismiss(null, 'save');
+    //this.modalCtrl.dismiss(null, 'save');
   }
 
   delete(): void {

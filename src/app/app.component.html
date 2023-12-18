@@ -8,12 +8,13 @@
             <ion-label>Budget UI</ion-label>
             <ion-chip>
               <ion-avatar>
-                <img [src]="(authService.currentUser() | async)?.photoURL" alt=""/>
+                <img [src]="(authService.currentUser() | async)?.photoURL"/>
               </ion-avatar>
               <ion-label>{{(authService.currentUser() | async)?.displayName}}</ion-label>
             </ion-chip>
           </ion-list-header>
           <ion-note></ion-note>
+
           <ion-menu-toggle auto-hide="false" *ngFor="let page of appPages; let i = index">
             <ion-item
               routerDirection="root"
@@ -28,20 +29,21 @@
           </ion-menu-toggle>
         </ion-list>
       </ion-content>
+
+      <ion-footer>
+        <ion-toolbar>
+          <ion-buttons>
+            <ion-button *ngIf="authService.currentUser() | async" (click)="authService.logout()" color="primary">
+              <ion-icon class="ion-padding-end" name="log-out"></ion-icon>
+              Logout
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-footer>
+
     </ion-menu>
 
     <!-- Router Outlet -->
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>
-
-<ion-footer>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-button *ngIf="authService.currentUser() | async" (click)="authService.logout()" color="primary">
-        <ion-icon class="ion-padding-end" name="log-out"></ion-icon>
-        Logout
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>

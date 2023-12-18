@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
 import { filter, from } from 'rxjs';
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-category-modal',
@@ -12,6 +13,11 @@ export class CategoryModalComponent {
     private readonly actionSheetService: ActionSheetService,
     private readonly modalCtrl: ModalController,
   ) {}
+  readonly categoryForm: FormGroup;
+  submitting = false;
+
+
+
 
   cancel(): void {
     this.modalCtrl.dismiss(null, 'cancel');

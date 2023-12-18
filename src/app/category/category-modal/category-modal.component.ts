@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
-import { filter, from } from 'rxjs';
-import {FormGroup} from "@angular/forms";
+import {filter, finalize, from} from 'rxjs';
+import {FormBuilder, FormGroup, Validators, ɵFormGroupValue, ɵTypedOrUntyped} from "@angular/forms";
+import {ToastService} from "../../shared/service/toast.service";
+import {CategoryService} from "../category.service";
+
+
 
 @Component({
   selector: 'app-category-modal',
@@ -11,8 +15,15 @@ import {FormGroup} from "@angular/forms";
 export class CategoryModalComponent {
   constructor(
     private readonly actionSheetService: ActionSheetService,
+    private readonly categoryService: CategoryService,
+    private readonly formBuilder: FormBuilder,
     private readonly modalCtrl: ModalController,
-  ) {}
+    private readonly toastService: ToastService
+  ) {
+    this.categoryForm = this.formBuilder.group({
+    name: ['', [Validators.required, Validators.maxLength(40)]],
+  });
+  }
   readonly categoryForm: FormGroup;
   submitting = false;
 
@@ -24,6 +35,17 @@ export class CategoryModalComponent {
   }
 
   save(): void {
+    this.submitting = true;
+    this.categoryService
+      .upsertCategory(this.categoryForm.value)
+      .pipe(finalize(() => (this.submitting = false)))
+      .subscribe({
+        next: () => {
+          this.toastService.displaySuccessToast('Category saved');
+          this.modalCtrl.dismiss(null, 'refresh');
+        },
+        error: (error) => this.toastService.displayErrorToast('Could not save category', error),
+      });
     this.modalCtrl.dismiss(null, 'save');
   }
 

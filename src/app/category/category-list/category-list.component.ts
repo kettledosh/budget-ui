@@ -101,10 +101,12 @@ export class CategoryListComponent {
 
 
   async openModal(category?: Category): Promise<void> {
-    const modal = await this.modalCtrl.create({ component: CategoryModalComponent });
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: { category: category ? { ...category } : {} },
+    });
     modal.present();
     const { role } = await modal.onWillDismiss();
-    console.log('role', role);
     if (role === 'refresh') this.reloadCategories();
   }
 }

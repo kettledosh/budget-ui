@@ -3,6 +3,7 @@
 <!-- ------ -->
 <ion-header>
   <ion-toolbar>
+    <ion-progress-bar *ngIf="submitting" type="indeterminate"></ion-progress-bar>
     <ion-buttons slot="start">
       <ion-button color="medium" (click)="cancel()" [disabled]="submitting">
         <ion-icon slot="start" name="close"></ion-icon>
@@ -36,11 +37,10 @@
       required="true"
     ></ion-input>
   </ion-item>
-</ion-content>
 
-<ion-header>
-  <!-- Progress Bar -->
-  <ion-toolbar>
-    <ion-progress-bar *ngIf="submitting" type="indeterminate"></ion-progress-bar>
-  </ion-toolbar>
-</ion-header>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="delete()" color="danger">
+      <ion-icon name="trash"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
 import {filter, finalize, from, mergeMap, tap} from 'rxjs';
-import {FormBuilder, FormGroup, Validators, ɵFormGroupValue, ɵTypedOrUntyped} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToastService} from "../../shared/service/toast.service";
 import {CategoryService} from "../category.service";
 import {Category} from "../../shared/domain";

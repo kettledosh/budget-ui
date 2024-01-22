@@ -20,6 +20,7 @@
   <ion-grid >
     <ion-row>
       <ion-col size="12" size-sm="4">
+        <!-- Search & sort -->
         <ion-item>
           <ion-icon name="swap-vertical" slot="start"></ion-icon>
           <ion-select interface="popover">
@@ -32,10 +33,8 @@
       <ion-col size="12" size-sm="4">
         <ion-item>
           <ion-icon name="pricetag-outline" slot="start"></ion-icon>
-          <ion-select interface="popover">
-            <ion-select-option>
-              "Categories"
-            </ion-select-option>
+          <ion-select interface="popover" placeholder="Category" value="Category">
+            <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
@@ -47,7 +46,25 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <!-- Empty List -->
+
+  <ion-item>
+    <ion-icon slot="start" name="alert-circle-outline"></ion-icon>
+    <ion-label> No categories found </ion-label>
+  </ion-item>
+
+
 </ion-content>
+
+
+
+
+
+
+<!-- ------- -->
+<!-- fab-button -->
+<!-- ------- -->
+
 <ion-content>
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button (click)="openModal()">
@@ -55,18 +72,26 @@
   </ion-fab-button>
 </ion-fab>
 </ion-content>
+
+
+
+
 <!-- ------- -->
 <!-- Footer -->
 <!-- ------- -->
-<ion-footer>
+<ion-footer role='contentinfo'>
   <ion-toolbar>
-    <ion-button slot="start" shape="round" fill="clear">
-      <ion-icon name="arrow-back-outline"></ion-icon>
-    </ion-button>
-    <ion-title>{{ date | date:'MMMM yyyy' }}</ion-title>
-    <ion-button slot="end" shape="round" fill="clear">
-      <ion-icon name="arrow-forward-outline"></ion-icon>
-    </ion-button>
+    <ion-buttons slot='start'>
+      <ion-button type='button' (click)='addMonths(-1)'>
+        <ion-icon slot='icon-only' name='arrow-back-outline'></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ date | date:'MMMM yyyy' }}
+    </ion-title>
+    <ion-buttons slot='end'>
+      <ion-button type='button' (click)='addMonths(1)'>
+        <ion-icon slot='icon-only' name='arrow-forward-outline'></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-
 </ion-footer>

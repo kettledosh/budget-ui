@@ -81,7 +81,9 @@ rsetze den Methodennamen ionViewWillEnter mit ionViewDidEnter.
 Öffne eine bestehende Kategorie.
 Welches Verhalten beobachtest du im Vergleich zur originalen Lösung und warum?
 Für mehr Infos schaue auch in die Doku.
+
 Füllt die Daten erst nach dem Laden ein. Somit ist der Name zuerst leer
+
 ionViewWillEnter
 Fired when the component routing to is about to animate into view.
 

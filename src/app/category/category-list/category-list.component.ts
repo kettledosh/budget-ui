@@ -99,7 +99,6 @@ export class CategoryListComponent {
     this.loadCategories(() => ($event ? ($event as RefresherCustomEvent).target.complete() : {}));
   }
 
-
   async openModal(category?: Category): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ModalController, RefresherCustomEvent} from '@ionic/angular';
 import { filter, finalize, from, mergeMap, tap } from 'rxjs';
 import { CategoryModalComponent } from '../../category/category-modal/category-modal.component';
@@ -10,25 +10,20 @@ import { ToastService } from 'src/app/shared/service/toast.service';
 import { CategoryService } from '../../category/category.service';
 import {Category, CategoryCriteria} from "../../shared/domain";
 
-
-
-
 @Component({
   selector: 'app-expense-modal',
   templateUrl: './expense-modal.component.html',
 })
-export class ExpenseModalComponent {
+export class ExpenseModalComponent{
   categories: Category[] = [];
   readonly expenseForm: FormGroup;
   submitting = false;
   readonly initialSort = 'name,asc';
   lastPageReached = false;
   loading = false;
-  searchCriteria: CategoryCriteria = { page: 0, size: 25, sort: this.initialSort };
+  searchCriteria: CategoryCriteria = { page: 0, size: 25, sort: this.initialSort};
+
   category: Category = {} as Category;
-
-
-
 
   constructor(
     private readonly actionSheetService: ActionSheetService,
@@ -42,7 +37,7 @@ export class ExpenseModalComponent {
       id: [], // hidden
       amount: [null, [Validators.required, Validators.min(0.01)]],
       categoryId: "",
-      date: "",
+      date: [formatISO(new Date())],
       name: ['', [Validators.required, Validators.maxLength(40)]],
     });
   }
@@ -80,7 +75,6 @@ export class ExpenseModalComponent {
     this.submitting = true;
     this.expenseService
     console.log(this.expenseForm.value)
-    //Assuming 'expenseService' and 'expenseForm' are properly declared and initialized
     this.expenseService.upsertExpense({
       ...this.expenseForm.value,
       date: formatISO(parseISO(this.expenseForm.value.date), { representation: 'date' }),

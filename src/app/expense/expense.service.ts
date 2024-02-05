@@ -12,12 +12,13 @@ export class ExpenseService {
 
     constructor(private readonly httpClient: HttpClient) {}
 
-    //Ausgaben Suchen
+    //Suche nach
     getExpenses = (pagingCriteria: ExpenseCriteria): Observable<Page<Expense>> =>
         this.httpClient.get<Page<Expense>>(this.apiURL, {params: new HttpParams({ fromObject: { ...pagingCriteria } }) });
 
     //Ausgaben erstellen / updaten
     upsertExpense = (expenseUpsertDto: ExpenseUpsertDto): Observable<void> => this.httpClient.put<void>(this.apiURL, expenseUpsertDto);
+
 
     //Ausgaben löschen
     deleteExpense = (id: string): Observable<void> => this.httpClient.delete<void>(`${this.apiURL}/${id}`);

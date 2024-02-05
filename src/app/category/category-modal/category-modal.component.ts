@@ -7,8 +7,6 @@ import {ToastService} from "../../shared/service/toast.service";
 import {CategoryService} from "../category.service";
 import {Category} from "../../shared/domain";
 
-
-
 @Component({
   selector: 'app-category-modal',
   templateUrl: './category-modal.component.html',

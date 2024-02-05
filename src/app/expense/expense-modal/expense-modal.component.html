@@ -11,7 +11,7 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title>Add Expense</ion-title>
+    <ion-title>{{expense.id ? 'Edit' : 'Add' }} Expense</ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="save()">
@@ -35,7 +35,7 @@
   <!-- Select Category -->
   <ion-item>
     <ion-icon name="pricetag" slot="start"></ion-icon>
-    <ion-select interface="popover" placeholder="Choose a category" value="Category">
+    <ion-select interface="popover" formControlName="categoryId" placeholder="Choose a category" value="Category">
       <ion-select-option *ngFor="let category of categories" [value]="category.id" >{{category.name}}</ion-select-option>
     </ion-select>
     <ion-button slot="end" size="small" (click)="openModal()">+</ion-button>
@@ -58,4 +58,11 @@
       </ng-template>
     </ion-modal>
   </ion-item>
+
+  <!-- Elete Button -->
+  <ion-fab *ngIf="expense.id" slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="delete()" color="danger" [disabled]="submitting">
+      <ion-icon name="trash"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

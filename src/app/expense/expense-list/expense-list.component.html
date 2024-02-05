@@ -1,6 +1,3 @@
-
-
-
 <!-- ------ -->
 <!-- Header -->
 <!-- ------ -->
@@ -9,7 +6,8 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Expenses</ion-title>
+    <ion-title>Expenses List</ion-title>
+    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -17,31 +15,38 @@
 <!-- Content -->
 <!-- ------- -->
 <ion-content>
-  <ion-grid >
+  <ion-refresher slot="fixed" (ionRefresh)="reloadExpenses($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-grid class="ion-padding" [formGroup]="searchForm">
     <ion-row>
+      <!-- Search & sort -->
       <ion-col size="12" size-sm="4">
-        <!-- Search & sort -->
         <ion-item>
           <ion-icon name="swap-vertical" slot="start"></ion-icon>
-          <ion-select interface="popover">
+          <ion-select interface="popover" formControlName="sort">
             <ion-select-option *ngFor="let sortOption of sortOptions" [value]="sortOption.value">
               {{sortOption.label}}
             </ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
+      <!-- Categories -->
       <ion-col size="12" size-sm="4">
         <ion-item>
-          <ion-icon name="pricetag-outline" slot="start"></ion-icon>
-          <ion-select interface="popover" placeholder="Category" value="Category">
-            <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-select-option>
+          <ion-icon name="pricetag" slot="start"></ion-icon>
+          <ion-select interface="popover" placeholder="Category" [multiple]="true" formControlName="categoryIds">
+            <ion-select-option role="option" *ngFor='let category of categories'
+                               [value]="category.id">{{category.name}}</ion-select-option>
           </ion-select>
+
         </ion-item>
       </ion-col>
+      <!-- Search -->
       <ion-col size="12" size-sm="4">
         <ion-item>
           <ion-icon name="search" slot="start"></ion-icon>
-          <ion-input maxlength="40" placeholder="Search" [clearInput]="true" ></ion-input>
+          <ion-input maxlength="40" placeholder="Search" [clearInput]="true" formControlName="name"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -49,7 +54,7 @@
 
 
   <!-- Expense List -->
-  <ion-list [ngSwitch]="expenses?.length" inset="true">
+  <ion-list [ngSwitch]="expenseGroups?.length" inset="true">
 
     <!-- Skeleton -->
     <ng-container *ngSwitchCase="null">
@@ -63,65 +68,74 @@
     <!-- Empty List -->
     <ion-item *ngSwitchCase="0">
       <ion-icon slot="start" name="alert-circle-outline"></ion-icon>
-      <ion-label> No categories found </ion-label>
+      <ion-label>No expenses found</ion-label>
     </ion-item>
 
-    <!-- Categories -->
+    <!-- Expenses List -->
     <ng-container *ngSwitchDefault>
-      <ion-item
-              button="true"
-              *ngFor="let expense of expenses"
-              [detail]="true"
-              [disabled]="loading"
-              (click)="openModal(expense)"
-      >
-        <ion-label> {{expense.name}} </ion-label>
-      </ion-item>
+      <ion-item-group *ngFor="let expense of expenseGroups">
+        <ion-item-divider>
+          <ion-label>
+            {{ expense.date | date:'dd.MM.yyyy' }}
+          </ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let expense of expense.expenses" button="true" [detail]="true"
+                  (click)="openModal(expense)" [disabled]="loading">
+          <ion-label>
+            <ion-grid>
+              <ion-row>
+                <ion-col>{{ expense.name }}</ion-col>
+                <ion-col class="ion-text-capitalize">
+                  <ion-icon name="pricetag"></ion-icon>
+                  {{ expense.category.name }}
+                </ion-col>
+                <ion-col class="ion-text-end">{{ expense.amount | currency }}</ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-label>
+        </ion-item>
+      </ion-item-group>
     </ng-container>
-
   </ion-list>
 
   <!-- Infinite Scroll -->
   <ion-infinite-scroll [disabled]="lastPageReached || loading" (ionInfinite)="loadNextExpensePage($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
-  <ion-content>
+
 
     <!-- Refresher -->
     <ion-refresher slot="fixed" (ionRefresh)="reloadExpenses($event)" [disabled]="loading">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-  </ion-content>
+
+
+
+  <!-- ------- -->
+  <!-- fab-button -->
+  <!-- ------- -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="openModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- ------- -->
+  <!-- Footer -->
+  <!-- ------- -->
 </ion-content>
-
-<!-- ------- -->
-<!-- fab-button -->
-<!-- ------- -->
-
-<ion-content>
-<ion-fab slot="fixed" vertical="bottom" horizontal="end">
-  <ion-fab-button (click)="openModal()">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
-</ion-content>
-
-<!-- ------- -->
-<!-- Footer -->
-<!-- ------- -->
-<ion-footer role='contentinfo'>
+<ion-footer>
   <ion-toolbar>
-    <ion-buttons slot='start'>
-      <ion-button type='button' (click)='addMonths(-1)'>
-        <ion-icon slot='icon-only' name='arrow-back-outline'></ion-icon>
+    <ion-buttons slot="start">
+      <ion-button (click)="addMonths(-1)">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ date | date:'MMMM yyyy' }}
-    </ion-title>
-    <ion-buttons slot='end'>
-      <ion-button type='button' (click)='addMonths(1)'>
-        <ion-icon slot='icon-only' name='arrow-forward-outline'></ion-icon>
+    <ion-title class="ion-text-center">{{ date | date:'MMMM yyyy' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addMonths(1)" slot="end">
+        <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

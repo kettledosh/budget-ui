@@ -85,9 +85,9 @@
             <ion-grid>
               <ion-row>
                 <ion-col>{{ expense.name }}</ion-col>
-                <ion-col class="ion-text-capitalize">
+                <ion-col *ngIf="expense.hasOwnProperty('category')" class="ion-text-center md hydrated">
                   <ion-icon name="pricetag"></ion-icon>
-                  {{ expense.category.name }}
+                  {{expense.category.name}}
                 </ion-col>
                 <ion-col class="ion-text-end">{{ expense.amount | currency }}</ion-col>
               </ion-row>
@@ -99,6 +99,7 @@
   </ion-list>
 
   <!-- Infinite Scroll -->
+
   <ion-infinite-scroll [disabled]="lastPageReached || loading" (ionInfinite)="loadNextExpensePage($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
@@ -108,9 +109,6 @@
     <ion-refresher slot="fixed" (ionRefresh)="reloadExpenses($event)" [disabled]="loading">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-
-
-
 
   <!-- ------- -->
   <!-- fab-button -->

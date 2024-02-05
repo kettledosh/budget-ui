@@ -55,6 +55,27 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
         this.loadExpenses();
       });
   }
+private isCategoryEmpty(){
+    return
+}
+  addMonths = (number: number): void => {
+    this.date = addMonths(this.date, number);
+    this.reloadExpenses();
+  };
+
+  private loadAllCategories(): void {
+    const pageToLoad = new BehaviorSubject(0);
+    pageToLoad
+      .pipe(mergeMap((page) => this.categoryService.getCategories({ page, size: 25, sort: 'name,asc' })))
+      .subscribe({
+        next: (categories) => {
+          if (pageToLoad.value === 0) this.categories = [];
+          this.categories.push(...categories.content);
+          if (!categories.last) pageToLoad.next(pageToLoad.value + 1);
+        },
+      });
+  }
+
   private loadExpenses(next: () => void = () => {
   }): void {
     this.searchCriteria.yearMonth = formatPeriod(this.date);
@@ -95,23 +116,6 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
           },
         }
       );
-  }
-  addMonths = (number: number): void => {
-    this.date = addMonths(this.date, number);
-    this.reloadExpenses();
-  };
-
-  private loadAllCategories(): void {
-    const pageToLoad = new BehaviorSubject(0);
-    pageToLoad
-      .pipe(mergeMap((page) => this.categoryService.getCategories({ page, size: 25, sort: 'name,asc' })))
-      .subscribe({
-        next: (categories) => {
-          if (pageToLoad.value == 0) this.categories = [];
-          this.categories.push(...categories.content);
-          if (!categories.last) pageToLoad.next(pageToLoad.value + 1);
-        },
-      });
   }
 
   private sortExpenses = (expenses: Expense[]): Expense[] => expenses.sort((a, b) => a.name.localeCompare(b.name));

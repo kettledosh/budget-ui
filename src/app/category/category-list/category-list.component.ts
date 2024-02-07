@@ -42,7 +42,6 @@ export class CategoryListComponent {
   loading = false;
   searchCriteria: CategoryCriteria = { page: 0, size: 25, sort: this.initialSort };
 
-
   readonly searchForm: FormGroup;
   readonly sortOptions: SortOption[] = [
     { label: 'Created at (newest first)', value: 'createdAt,desc' },
@@ -50,9 +49,7 @@ export class CategoryListComponent {
     { label: 'Name (A-Z)', value: 'name,asc' },
     { label: 'Name (Z-A)', value: 'name,desc' },
   ];
-
   private readonly searchFormSubscription: Subscription;
-
   private loadCategories(next: () => void = () => {}): void {
     if (!this.searchCriteria.name) delete this.searchCriteria.name;
     this.loading = true;
@@ -82,14 +79,12 @@ export class CategoryListComponent {
   confirm() {
     this.modal.dismiss(this.name, 'confirm');
   }
-
   onWillDismiss(event: Event) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
 
     }
   }
-
   loadNextCategoryPage($event: any) {
     this.searchCriteria.page++;
     this.loadCategories(() => ($event as InfiniteScrollCustomEvent).target.complete());
@@ -98,7 +93,6 @@ export class CategoryListComponent {
     this.searchCriteria.page = 0;
     this.loadCategories(() => ($event ? ($event as RefresherCustomEvent).target.complete() : {}));
   }
-
   async openModal(category?: Category): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,

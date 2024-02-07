@@ -8,7 +8,7 @@ import {ExpenseUpsertDto, ExpenseCriteria, Expense, Page} from "../shared/domain
 @Injectable({ providedIn: 'root' })
 export class ExpenseService {
     private readonly apiURL = `${environment.backendUrl}/expenses`;
-    private readonly apiV2Url = `${environment.backendUrl}/v2/expenses`;
+    //private readonly apiV2Url = `${environment.backendUrl}/v2/expenses`;
 
     constructor(private readonly httpClient: HttpClient) {}
 
@@ -18,7 +18,6 @@ export class ExpenseService {
 
     //Ausgaben erstellen / updaten
     upsertExpense = (expenseUpsertDto: ExpenseUpsertDto): Observable<void> => this.httpClient.put<void>(this.apiURL, expenseUpsertDto);
-
 
     //Ausgaben löschen
     deleteExpense = (id: string): Observable<void> => this.httpClient.delete<void>(`${this.apiURL}/${id}`);

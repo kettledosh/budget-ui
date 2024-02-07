@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ModalController, RefresherCustomEvent} from '@ionic/angular';
 import { filter, finalize, from, mergeMap, tap } from 'rxjs';
 import { CategoryModalComponent } from '../../category/category-modal/category-modal.component';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {formatISO, getDate, parseISO} from 'date-fns';
+import {formatISO} from 'date-fns';
 import { ExpenseService } from '../expense.service';
 import { ToastService } from 'src/app/shared/service/toast.service';
 import { CategoryService } from '../../category/category.service';
@@ -74,9 +74,8 @@ export class ExpenseModalComponent{
   cancel(): void {
     this.modalCtrl.dismiss(null, 'cancel');
   }
-
   save(): void {
-    this.expenseForm.value.categoryId ? null : delete this.expenseForm.value.categoryId //überprüft ob categoryId leer ist, wenn so das value aus dem object löschen
+    this.expenseForm.value.categoryId ? null : delete this.expenseForm.value.categoryId //überprüft ob categoryId leer ist, wenn so, das value aus dem object löschen
     this.submitting = true;
     this.expenseService
         .upsertExpense(this.expenseForm.value)

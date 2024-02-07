@@ -4,7 +4,7 @@ import { filter, finalize, from, mergeMap, tap } from 'rxjs';
 import { CategoryModalComponent } from '../../category/category-modal/category-modal.component';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { formatISO, parseISO } from 'date-fns';
+import {formatISO, getDate, parseISO} from 'date-fns';
 import { ExpenseService } from '../expense.service';
 import { ToastService } from 'src/app/shared/service/toast.service';
 import { CategoryService } from '../../category/category.service';
@@ -45,8 +45,9 @@ export class ExpenseModalComponent{
   ionViewWillEnter(): void {
     this.loadCategories();
     const { id, amount, category, date, name } = this.expense;
-    if (category) this.categories.push(category);
+    category ? this.categories.push(category) : null;
     this.expenseForm.patchValue({ id, name, amount, categoryId: category?.id, date });
+    this.expenseForm.controls['date'].setValue(formatISO(new Date(), { representation: 'date' })) //Ansonsten is Date undefined :S
   }
 
   private loadCategories(next: () => void = () => {}): void {
@@ -75,14 +76,10 @@ export class ExpenseModalComponent{
   }
 
   save(): void {
-    const expenseData = {
-      ...this.expenseForm.value, // Kopiert alle Werte aus expenseForm.value
-      date: formatISO(parseISO(this.expenseForm.value.date), { representation: 'date' }),
-    };
-    console.log(this.expenseForm.value)
+    this.expenseForm.value.categoryId ? null : delete this.expenseForm.value.categoryId //überprüft ob categoryId leer ist, wenn so das value aus dem object löschen
     this.submitting = true;
     this.expenseService
-        .upsertExpense(expenseData)
+        .upsertExpense(this.expenseForm.value)
         .pipe(finalize(() => (this.submitting = false)))
         .subscribe({
           next: () => {
@@ -91,67 +88,25 @@ export class ExpenseModalComponent{
           },
           error: (error) => this.toastService.displayErrorToast('Could not save expense', error),
         });
-    this.modalCtrl.dismiss(null, 'save');
-
-    this.expenseService.upsertExpense({
-      ...this.expenseForm.value,
-      date: formatISO(parseISO(this.expenseForm.value.date), { representation: 'date' }),
-    });
-    this.modalCtrl.dismiss(null, 'save');
   }
-
-
-
-  /*  save(): void {
-      // Set submitting to true to indicate that the save operation is in progress
-      this.submitting = true;
-
-      // Call the upsertExpense method from the expenseService with the form value
-      this.expenseService
-        .upsertExpense(this.expenseForm.value)
-        .pipe(
-          // Use finalize to execute code after the observable completes or errors
-          finalize(() => (this.submitting = false))
-        )
-        .subscribe({
-          // Handle the successful response
-          next: () => {
-            // Display a success toast
-            this.toastService.displaySuccessToast('Expense saved');
-
-            // Dismiss the modal with a 'refresh' signal
-            this.modalCtrl.dismiss(null, 'refresh');
-          },
-          // Handle errors during the subscription
-          error: (error) =>
-            this.toastService.displayErrorToast('Could not save expense', error),
-        });
-
-      // Dismiss the modal with a 'save' signal
-      this.modalCtrl.dismiss(null, 'save');
-
-      // Modify the date field before calling upsertExpense again
-      this.expenseService.upsertExpense({
-        ...this.expenseForm.value,
-        date: formatISO(parseISO(this.expenseForm.value.date), {
-          representation: 'date',
-        }),
-      });
-
-      // Dismiss the modal with a 'save' signal again (duplicate line)
-      this.modalCtrl.dismiss(null, 'save');
-    }
-  */
-
 
   delete(): void {
     from(this.actionSheetService.showDeletionConfirmation('Are you sure you want to delete this expense?'))
-        .pipe(
-            filter((action) => action === 'delete'))
-
-        .subscribe(
-            () => this.modalCtrl.dismiss(null, 'delete'));
+      .pipe(
+        filter((action) => action === 'delete'),
+        tap(() => (this.submitting = true)),
+        mergeMap(() => this.expenseService.deleteExpense(this.expense.id!)),
+        finalize(() => (this.submitting = false)),
+      )
+      .subscribe({
+        next: () => {
+          this.toastService.displaySuccessToast('Expense deleted');
+          this.modalCtrl.dismiss(null, 'refresh');
+        },
+        error: (error) => this.toastService.displayErrorToast('Could not delete category', error),
+      });
   }
+
 
   async showCategoryModal(): Promise<void> {
     const categoryModal = await this.modalCtrl.create({ component: CategoryModalComponent });
@@ -174,5 +129,4 @@ export class ExpenseModalComponent{
     this.searchCriteria.page = 0;
     this.loadCategories(() => ($event ? ($event as RefresherCustomEvent).target.complete() : {}));
   }
-
 }

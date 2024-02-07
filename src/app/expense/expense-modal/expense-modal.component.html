@@ -14,7 +14,7 @@
     <ion-title>{{expense.id ? 'Edit' : 'Add' }} Expense</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="save()">
+      <ion-button (click)="save()" [disabled]="submitting">
         <ion-icon slot="start" name="save"></ion-icon>
         Save
       </ion-button>
@@ -35,7 +35,8 @@
   <!-- Select Category -->
   <ion-item>
     <ion-icon name="pricetag" slot="start"></ion-icon>
-    <ion-select interface="popover" formControlName="categoryId" placeholder="Choose a category" value="Category">
+    <ion-select interface="popover" formControlName="categoryId" placeholder="Choose a category" value="Category" [disabled]="submitting">
+      <ion-select-option></ion-select-option>
       <ion-select-option *ngFor="let category of categories" [value]="category.id" >{{category.name}}</ion-select-option>
     </ion-select>
     <ion-button slot="end" size="small" (click)="openModal()">+</ion-button>
@@ -44,7 +45,7 @@
   <!-- Amount in CHF -->
   <ion-item>
     <ion-icon name="cash" slot="start"></ion-icon>
-    <ion-input formControlName="amount" inputmode="decimal" placeholder="Enter the amount in CHF" required step="0.01"></ion-input>
+    <ion-input formControlName="amount" inputmode="decimal" type="number" placeholder="Enter the amount in CHF" required step="0.01" [disabled]="submitting"></ion-input>
   </ion-item>
 
   <!-- Select Date -->
@@ -59,9 +60,9 @@
     </ion-modal>
   </ion-item>
 
-  <!-- Elete Button -->
+  <!-- Delete Button -->
   <ion-fab *ngIf="expense.id" slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="delete()" color="danger" [disabled]="submitting">
+    <ion-fab-button (click)="delete()" color="danger" [disabled]="submitting" >
       <ion-icon name="trash"></ion-icon>
     </ion-fab-button>
   </ion-fab>
